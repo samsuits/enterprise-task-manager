@@ -2,3 +2,6 @@ node_modules
 vendor
 .env
 docker/postgres/data
+.git
+backend/.env
+frontend/.env
