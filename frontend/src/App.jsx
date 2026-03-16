@@ -1,8 +1,17 @@
+import { BrowserRouter, Routes, Route} from "react-router-dom"
+import TaskList from "./pages/TaskList"
+import TaskCreate from "./pages/TaskCreate"
+import TaskDetail from "./pages/TaskDetail"
+
 function App() {
   return (
-    <div className="h-screen flex items-center justify-center text-4xl font-bold text-blue-600">
-      Enterprise Task Manager
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<TaskList />}></Route>
+        <Route path="/tasks/create" element={<TaskCreate />}></Route>
+        <Route path="/tasks/:id" element={<TaskDetail />}></Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
