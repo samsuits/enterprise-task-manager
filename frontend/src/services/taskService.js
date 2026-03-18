@@ -16,3 +16,6 @@ export const addComment = (taskId, data) => {
     return api.post(`/tasks/${taskId}/comments`, data)
 }
 
+export const updateTaskStatus = (id, status) => {
+    return api.patch(`/tasks/${id}/status`, { status});
+}

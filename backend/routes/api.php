@@ -18,4 +18,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tasks/{id}', [TaskController::class,'show']);
 
     Route::post('/tasks/{task}/comments', [CommentController::class,'store']);
+    Route::patch('/tasks/{id}/status', [TaskController::class, 'updateStatus']);
 });

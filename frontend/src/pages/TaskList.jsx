@@ -10,10 +10,17 @@ function TaskList() {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Fetch tasks
+ // Fetch tasks
   useEffect(() => {
     getTasks()
-      .then(res => setTasks(res.data))
+      .then(res => {
+        // Handle both formats: array OR { data: [...] }
+        const data = Array.isArray(res.data)
+          ? res.data
+          : res.data.data || []
+
+        setTasks(data)
+      })
       .catch(err => {
         console.error("Failed to fetch tasks:", err)
         setTasks([])
@@ -23,7 +30,7 @@ function TaskList() {
       })
   }, [])
 
-  // Logout handler
+
   const handleLogout = () => {
     logout()
     navigate("/login")
@@ -32,11 +39,8 @@ function TaskList() {
   return (
     <div className="p-8 max-w-3xl mx-auto">
 
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">
-          Tasks
-        </h1>
+        <h1 className="text-2xl font-bold">Tasks</h1>
 
         <button
           onClick={handleLogout}
@@ -46,7 +50,6 @@ function TaskList() {
         </button>
       </div>
 
-      {/* Create Task Button */}
       <Link
         to="/tasks/create"
         className="bg-blue-600 text-white px-4 py-2 rounded"
@@ -54,48 +57,30 @@ function TaskList() {
         Create Task
       </Link>
 
-      {/* Content */}
       <div className="mt-6">
 
-        {/* Loading */}
-        {loading && (
-          <p className="text-gray-500">Loading tasks...</p>
-        )}
+        {loading && <p>Loading tasks...</p>}
 
-        {/* Empty State */}
         {!loading && tasks.length === 0 && (
-          <p className="text-gray-500">
-            No tasks found. Create your first task.
-          </p>
+          <p>No tasks found</p>
         )}
 
-        {/* Task List */}
         <div className="space-y-4">
           {Array.isArray(tasks) && tasks.map(task => (
-            <div
-              key={task.id}
-              className="border p-4 rounded hover:shadow transition"
-            >
+            <div key={task.id} className="border p-4 rounded">
+
               <Link to={`/tasks/${task.id}`}>
-                <h2 className="font-semibold text-lg">
-                  {task.title}
-                </h2>
+                <h2 className="font-semibold">{task.title}</h2>
               </Link>
 
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600">
                 Status: {task.status}
               </p>
 
               <p className="text-sm text-gray-600">
-                Priority: {task.priority}
+                Assigned to: {task.assigned_user?.name || "Unassigned"}
               </p>
 
-              <p className="text-sm text-gray-600">
-                Assigned to:{" "}
-                {task.assigned_user?.name ||
-                 task.assigned_team?.name ||
-                 "Unassigned"}
-              </p>
             </div>
           ))}
         </div>
