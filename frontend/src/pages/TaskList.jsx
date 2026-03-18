@@ -1,48 +1,109 @@
 import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { getTasks } from "../services/taskService"
-import { Link } from "react-router-dom"
+import { logout } from "../services/auth"
 
 function TaskList() {
-    const [tasks, setTasks] = useState([])
 
-    useEffect(() => {
-        getTasks().then(res => {
-            setTasks(res.data)
-        })
-    }, [])
+  const navigate = useNavigate()
 
-    return (
-        <div className="p-8">
-            <h1 className="text-2xl font-bold mb-6">
-                Tasks
-            </h1>
+  const [tasks, setTasks] = useState([])
+  const [loading, setLoading] = useState(true)
 
-            <Link
-                to="/tasks/create"
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                Create Task
-            </Link>
+  // Fetch tasks
+  useEffect(() => {
+    getTasks()
+      .then(res => setTasks(res.data))
+      .catch(err => {
+        console.error("Failed to fetch tasks:", err)
+        setTasks([])
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
 
-            <div className="mt-6 space-y-4">
-                {tasks.map(task => (
-                    <div key={task.id}
-                    className="border p-4 rounded">
-                        <Link to={`/tasks/${task.id}`}>
-                            <h2 className="font-semibold">
-                                {task.title}
-                            </h2>
-                        </Link>
+  // Logout handler
+  const handleLogout = () => {
+    logout()
+    navigate("/login")
+  }
 
-                        <p className="text-sm text-gray-600">
-                            {task.status}
-                        </p>
-                    </div>
-                ))}
+  return (
+    <div className="p-8 max-w-3xl mx-auto">
+
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">
+          Tasks
+        </h1>
+
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-3 py-1 rounded"
+        >
+          Logout
+        </button>
+      </div>
+
+      {/* Create Task Button */}
+      <Link
+        to="/tasks/create"
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Create Task
+      </Link>
+
+      {/* Content */}
+      <div className="mt-6">
+
+        {/* Loading */}
+        {loading && (
+          <p className="text-gray-500">Loading tasks...</p>
+        )}
+
+        {/* Empty State */}
+        {!loading && tasks.length === 0 && (
+          <p className="text-gray-500">
+            No tasks found. Create your first task.
+          </p>
+        )}
+
+        {/* Task List */}
+        <div className="space-y-4">
+          {Array.isArray(tasks) && tasks.map(task => (
+            <div
+              key={task.id}
+              className="border p-4 rounded hover:shadow transition"
+            >
+              <Link to={`/tasks/${task.id}`}>
+                <h2 className="font-semibold text-lg">
+                  {task.title}
+                </h2>
+              </Link>
+
+              <p className="text-sm text-gray-600 mt-1">
+                Status: {task.status}
+              </p>
+
+              <p className="text-sm text-gray-600">
+                Priority: {task.priority}
+              </p>
+
+              <p className="text-sm text-gray-600">
+                Assigned to:{" "}
+                {task.assigned_user?.name ||
+                 task.assigned_team?.name ||
+                 "Unassigned"}
+              </p>
             </div>
-
+          ))}
         </div>
-    )
+
+      </div>
+
+    </div>
+  )
 }
 
 export default TaskList

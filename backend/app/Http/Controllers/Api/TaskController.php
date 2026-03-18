@@ -22,9 +22,18 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        $task = $this->tasks->create($request->all());
+        $request->validate([
+            'title' => 'required|string',
+            'assigned_user_id' => 'nullable|exists:users,id',
+            'assigned_team_id' => 'nullable|exists:teams,id'
+        ]);
 
-        return response()->json($task);
+        return response()->json(
+            $this->tasks->create([
+                ...$request->all(),
+                'created_by' => $request->user()->id
+            ])
+        );
     }
 
     public function show($id)

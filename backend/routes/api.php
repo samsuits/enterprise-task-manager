@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -10,6 +11,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/users', [UserController::class, 'index']);
 
     Route::get('/tasks', [TaskController::class,'index']);
     Route::post('/tasks', [TaskController::class,'store']);
