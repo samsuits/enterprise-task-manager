@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { getTasks } from "../services/taskService";
+import { useEffect, useState } from "react"
+import { getTasks } from "../services/taskService"
 import { Link } from "react-router-dom"
 
 function TaskList() {

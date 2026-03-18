@@ -1,7 +1,7 @@
-import api from './api'
+import api from "./api"
 
 export const getTasks = () => {
-    return api.get('/tasks')
+    return api.get("/tasks")
 }
 
 export const createTask = (data) => {

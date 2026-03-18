@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { createTask } from '../services/taskService'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { createTask } from "../services/taskService"
+import { useNavigate } from "react-router-dom"
 
 function TaskCreate() {
 
     const navigate = useNavigate()
 
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
 
     const submit = async (e) => {

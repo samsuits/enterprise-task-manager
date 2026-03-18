@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { useParams } from 'react-router-dom'
-import { getTask, addComment } from '../services/taskService'
+import { useParams } from "react-router-dom"
+import { getTask, addComment } from "../services/taskService"
 
 function TaskDetail()
 {
